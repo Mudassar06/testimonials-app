@@ -1,7 +1,7 @@
-import FetchDataSteps from "@/components/tutorial/fetch-data-steps";
 import { createClient } from "@/utils/supabase/server";
 import { InfoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
+import Link from 'next/link'
 
 export default async function ProtectedPage() {
   const supabase = createClient();
@@ -30,8 +30,12 @@ export default async function ProtectedPage() {
         </pre>
       </div>
       <div>
-        {/* <h2 className="font-bold text-2xl mb-4">Next steps</h2>
-        <FetchDataSteps /> */}
+        <Link
+          href="/protected/create-workspace"
+          className="mb-2 rounded-md border border-foreground/20 px-4 py-2 text-center text-foreground no-underline"
+        >
+          Create Workspace
+        </Link>
       </div>
     </div>
   );
