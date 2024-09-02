@@ -3,11 +3,11 @@ import React from 'react'
 import { useState } from 'react';
 import { createClient } from '@/utils/supabase/client'
 import axios from 'axios';
+import { useRouter } from 'next/navigation'
 
 export default function CreateWorkspace() {
 
-    const supabase = createClient();
-
+    const router = useRouter();
     const [name, setName] = useState('');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -21,13 +21,15 @@ export default function CreateWorkspace() {
             workspace_title: title,
             workspace_desc: description,
         };
-
+        
         try {
             const response = await axios.post('/api/createWorkspace', workspaceData);
             console.log('SUCCESS:', response.data);
             setName('');
             setTitle('');
             setDescription('');
+
+            router.push(`/protected/workspace/${encodeURIComponent(name)}`);
         } catch (error) {
             console.error('ERROR:', error);
         }

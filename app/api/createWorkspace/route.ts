@@ -1,14 +1,12 @@
 import { NextResponse } from "next/server";
 import { CreateWorkspaceRequest } from "@/lib/types";
 import { createClient } from '@/utils/supabase/client'
+import { createClient as createSsrClient } from "@/utils/supabase/server";
 
 export async function POST(request: Request) {
     const supabase = createClient();
-
-    //SOLVE THIS: TAKE USERID DIRECTLY FROM SUPABASE.AUTH
-    const {
-        data: { user },
-      } = await supabase.auth.getUser();
+    const supabaseSsr = createSsrClient();
+    const { data: { user } } = await supabaseSsr.auth.getUser();
       console.log(user?.id);
 
     try {
@@ -28,7 +26,7 @@ export async function POST(request: Request) {
           .insert([
             {
               w_name,
-              admin: 'acd69e4e-5c7e-402b-863f-a4c0421494ea',
+              admin: user?.id,
               workspace_title,
               workspace_desc,
             },
