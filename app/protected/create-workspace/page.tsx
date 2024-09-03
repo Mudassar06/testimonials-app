@@ -1,7 +1,6 @@
 'use client'
 import React from 'react'
 import { useState } from 'react';
-import { createClient } from '@/utils/supabase/client'
 import axios from 'axios';
 import { useRouter } from 'next/navigation'
 
@@ -14,7 +13,6 @@ export default function CreateWorkspace() {
   
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-
 
         const workspaceData = {
             w_name: name,
@@ -30,7 +28,7 @@ export default function CreateWorkspace() {
             setDescription('');
 
             router.push(`/protected/workspace/${encodeURIComponent(name)}`);
-        } catch (error) {
+        } catch (error:any) {
             console.error('ERROR:', error);
         }
     };

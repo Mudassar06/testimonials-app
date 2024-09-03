@@ -7,18 +7,29 @@ export async function POST(request: Request) {
     const supabase = createClient();
     const supabaseSsr = createSsrClient();
     const { data: { user } } = await supabaseSsr.auth.getUser();
-      console.log(user?.id);
+    // console.log(user?.id);
 
     try {
 
         const body = await request.json();
-        console.log('Received body:', body);
+        // console.log('Received body:', body);
 
         const { w_name, workspace_title, workspace_desc }: CreateWorkspaceRequest = body;
-        console.log("kaendfdiehfif", w_name, workspace_title, workspace_desc )
+        // console.log("kaendfdiehfif", w_name, workspace_title, workspace_desc )
         
         if (!w_name || !workspace_title) {
           return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+        }
+
+        // Check if workspace name already exists
+        const { data: existingWorkspace } = await supabase
+            .from('workspaces')
+            .select('w_name')
+            .eq('w_name', w_name)
+            .single();
+
+        if (existingWorkspace) {
+            return NextResponse.json({ error: 'Workspace name already exists' }, { status: 400 });
         }
     
         const { data, error } = await supabase
