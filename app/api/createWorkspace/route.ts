@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     const supabase = createClient();
     const supabaseSsr = createSsrClient();
     const { data: { user } } = await supabaseSsr.auth.getUser();
-    // console.log(user?.id);
+    console.log(user?.id,"USERID");
 
     try {
 
