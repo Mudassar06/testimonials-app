@@ -11,7 +11,7 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({ isOpen, onClose, on
     const [contentType, setContentType] = useState<'text' | 'video'>('text');
     const [name, setName] = useState('');
     const [email, setEmail] = useState(''); //Validate email
-    const [rating, setRating] = useState<number>(1); // Default rating
+    const [rating, setRating] = useState<number>(3); // Default rating
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
@@ -28,10 +28,12 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({ isOpen, onClose, on
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-card p-6 rounded shadow-lg">
+            <div className="bg-card w-2/3 p-6 rounded shadow-lg">
                 <h2 className="text-lg font-bold mb-4 text-foreground">Submit Testimonial</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
+                    <div className='w-full mb-4 flex gap-2'>
+
+                    <div className="w-full">
                         <label className="block mb-2 text-foreground">Name:</label>
                         <input
                             type="text"
@@ -42,7 +44,7 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({ isOpen, onClose, on
                             required
                         />
                     </div>
-                    <div className="mb-4">
+                    <div className="w-full">
                         <label className="block mb-2 text-foreground">Email:</label>
                         <input
                             type="email"
@@ -53,7 +55,11 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({ isOpen, onClose, on
                             required
                         />
                     </div>
-                    <div className="mb-4">
+                    </div>
+
+                    
+                    <div className='w-full mb-4 flex gap-2'>
+                    <div className="w-full">
                         <label className="block mb-2 text-foreground">Rating:</label>
                         <select
                             value={rating}
@@ -65,7 +71,7 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({ isOpen, onClose, on
                             ))}
                         </select>
                     </div>
-                    <div className="mb-4">
+                    <div className="w-full">
                         <label className="block mb-2 text-foreground">Content Type:</label>
                         <select
                             value={contentType}
@@ -76,7 +82,9 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({ isOpen, onClose, on
                             <option value="video">Video</option>
                         </select>
                     </div>
-                    <div className="mb-4">
+                    
+                    </div>
+                    <div className="w-full">
                         <label className="block mb-2 text-foreground">Content:</label>
                         <textarea
                             value={content}
@@ -86,9 +94,9 @@ const TestimonialModal: React.FC<TestimonialModalProps> = ({ isOpen, onClose, on
                             required
                         />
                     </div>
-                    <div className="flex justify-end">
-                        <button type="button" onClick={onClose} className="mr-2 bg-gray-300 p-2 rounded">Cancel</button>
-                        <button type="submit" className="bg-primary text-primary-foreground p-2 rounded">Submit</button>
+                    <div className="flex justify-end mt-4">
+                        <button type="button" onClick={onClose} className="mr-2 bg-destructive text-destructive-foreground p-2 px-4 rounded">Cancel</button>
+                        <button type="submit" className="bg-primary text-primary-foreground p-2 px-4 rounded">Submit</button>
                     </div>
                 </form>
             </div>

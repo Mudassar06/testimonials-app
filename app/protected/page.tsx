@@ -45,37 +45,32 @@ export default function ProtectedPage() {
 
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
-      <div className="w-full">
-        <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
-          <InfoIcon size="16" strokeWidth={2} />
-          This is a protected page that you can only see as an authenticated user.
-        </div>
-      </div>
-      <div className="flex flex-col gap-2 items-start">
-        <h2 className="font-bold text-2xl mb-4">Your user details</h2>
-        <pre className="text-xs font-mono p-3 rounded border max-h-32 overflow-auto">
-          {JSON.stringify(user, null, 2)}
-        </pre>
-      </div>
-      <div>
+
+        <div className='w-full flex justify-between items-center'>
+          <h1 className="font-bold text-2xl max-sm:text-base ">Workspaces</h1>
         <Link
           href="/protected/create-workspace"
-          className="mb-2 rounded-md border border-foreground/20 px-4 py-2 text-center text-foreground no-underline"
+          className="w-fit rounded-md max-sm:text-xs border border-background/20 px-4 py-1 bg-blue-400 text-center text-white no-underline"
         >
-          Create Workspace
+          Add New
         </Link>
-      </div>
+
+        </div>
       <div>
-        <h1 className="font-bold text-2xl mb-4">My Workspaces</h1>
         {workspaces.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {workspaces.map((workspace) => (
-              <div key={workspace.id} className="bg-card border border-border p-4 rounded-lg shadow-lg">
-                <h3 className="font-semibold text-lg text-foreground">{workspace.workspace_title}</h3>
-                <p className="text-sm text-muted-foreground">Name: {workspace.w_name}</p>
-                <p className="text-sm text-muted-foreground">Description: {workspace.workspace_desc}</p>
-                <p className="text-sm text-muted-foreground">Created At: {new Date(workspace.created_at).toLocaleString()}</p>
-                <p className="text-sm text-muted-foreground">Updated At: {new Date(workspace.updated_at).toLocaleString()}</p>
+              <div key={workspace.id} className="bg-card flex flex-col gap-2 border border-border p-4 rounded-lg shadow-lg">
+                <div className='flex'>
+
+                <Link href={`/protected/workspace/${workspace.workspace_title}`}>
+                    <h3 className="font-semibold text-lg text-foreground">{workspace.workspace_title}</h3>
+                </Link>
+                
+                </div>
+                {/* <p className="text-sm text-muted-foreground">Name: {workspace.w_name}</p> */}
+                <p className="text-sm text-secondary-foreground">{workspace.workspace_desc}</p>
+                <p className="text-xs text-muted-foreground">Updated - {new Date(workspace.updated_at).toLocaleString()}</p>
               </div>
             ))}
           </div>

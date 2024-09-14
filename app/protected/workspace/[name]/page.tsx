@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios";
-
+import { v4 as uuidv4 } from 'uuid';
 export default function WorkspacePage() {
   const { name } = useParams<{ name: string }>();
   const [workspace, setWorkspace] = useState<any>(null);
@@ -91,7 +91,7 @@ export default function WorkspacePage() {
       });
 
       console.log("Current testimonials confirmed:", response.data);
-      setCurrentTestimonials([]); 
+      setCurrentTestimonials([]);
       setShowCheckboxes(false);
     } catch (error) {
       console.error("Error confirming current testimonials:", error);
@@ -109,106 +109,123 @@ export default function WorkspacePage() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="p-6">
+    <div>
+
       <div>
         <h1 className="text-3xl font-bold text-foreground">
-          Workspace Name: {workspace.w_name}
+          {workspace.w_name}
         </h1>
-        <p className="text-lg font-bold text-foreground">
-          Title: {workspace.workspace_title}
-        </p>
-        <p className="text-md font-bold text-foreground">
-          Description: {workspace.workspace_desc}
+        <p className="text-md  text-muted-foreground">
+          {workspace.workspace_desc}
         </p>
       </div>
-      <h2 className="text-lg font-bold mb-4">My Testimonials</h2>
-      <div className="flex justify-between mb-4">
-        <button
-          className="bg-primary text-primary-foreground px-4 py-2 rounded"
-          onClick={toggleCheckboxVisibility}
-        >
-          {showCheckboxes ? "Hide Checkboxes" : "Current Testimonials"}
-        </button>
-        {showCheckboxes && (
-          <button
-            className="bg-primary text-primary-foreground px-4 py-2 rounded"
-            onClick={confirmCurrentTestimonials}
-          >
-            Confirm Current Testimonials
-          </button>
-        )}
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {testimonials.length > 0 ? (
-          testimonials.map((testimonial) => (
-            <div
-              key={testimonial.testimonial_id}
-              className="bg-card border border-border p-4 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl relative"
-            >
-              {showCheckboxes && (
-                <input
-                  type="checkbox"
-                  className="absolute top-2 right-2"
-                  checked={currentTestimonials.includes(
-                    testimonial.testimonial_id
-                  ) || isTestimonialInCurrentTestimonials(testimonial.testimonial_id)}
-                  onChange={() =>
-                    handleCheckboxChange(testimonial.testimonial_id)
-                  }
-                />
-              )}
-              <p className="font-semibold text-lg text-foreground">
-                {testimonial.name}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {testimonial.email}
-              </p>
-              <p className="text-sm text-foreground">
-                Rating: {testimonial.rating}
-              </p>
-              <p className="mt-2 text-base text-foreground">
-                {testimonial.content}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Type: {testimonial.content_type}
-              </p>
+
+      <div className="flex gap-8">
+
+
+        {/* left layout */}
+        <div className="">
+          <h2 className="text-lg my-4 ">Current Testimonials</h2>
+          {fetchedCurrentTestimonials.length > 0 ? (
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-4 h-screen overflow-y-scroll custom-scroll px-2">
+              {fetchedCurrentTestimonials.map((testimonial) => (
+                <div
+                  key={testimonial.testimonials.testimonial_id}
+                  className="bg-card h-fit w-full border border-border p-4 rounded-lg shadow-lg"
+                >
+                  <p className="font-semibold text-lg text-foreground">
+                    {testimonial.testimonials.name}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {testimonial.testimonials.email}
+                  {testimonial.rating}
+                  </p>
+                  <div className="flex gap-1">
+                    {
+                      Array(testimonial.rating).fill(0).map((e,i)=>{
+                          return <div key={uuidv4()}>⭐</div>
+                      })
+                    }
+                  </div>
+                  <p className="mt-2 text-base text-foreground">
+                    {testimonial.testimonials.content}
+                  </p>
+                </div>
+              ))}
             </div>
-          ))
-        ) : (
-          <p>No testimonials found for this workspace.</p>
-        )}
-      </div>
-      <div>
-        <h2 className="text-lg font-bold mb-4">Current Testimonials</h2>
-        {fetchedCurrentTestimonials.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {fetchedCurrentTestimonials.map((testimonial) => (
-              <div
-                key={testimonial.testimonials.testimonial_id}
-                className="bg-card border border-border p-4 rounded-lg shadow-lg"
+          ) : (
+            <p>No current testimonials found for this workspace.</p>
+          )}
+        </div>
+        {/* right layout */}
+        
+        <div>
+
+          <h2 className="text-lg my-4">My Testimonials</h2>
+          <div className="flex justify-between mb-4">
+            <button
+              className="bg-primary text-primary-foreground px-4 py-2 rounded"
+              onClick={toggleCheckboxVisibility}
+            >
+              {showCheckboxes ? "Cancel" : "Add Current Testimonials"}
+            </button>
+            {showCheckboxes && (
+              <button
+                className="bg-primary text-primary-foreground px-4 py-2 rounded"
+                onClick={confirmCurrentTestimonials}
               >
-                <p className="font-semibold text-lg text-foreground">
-                  {testimonial.testimonials.name}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {testimonial.testimonials.email}
-                </p>
-                <p className="text-sm text-foreground">
-                  Rating: {testimonial.testimonials.rating}
-                </p>
-                <p className="mt-2 text-base text-foreground">
-                  {testimonial.testimonials.content}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Type: {testimonial.testimonials.content_type}
-                </p>
-              </div>
-            ))}
+                Add
+              </button>
+            )}
           </div>
-        ) : (
-          <p>No current testimonials found for this workspace.</p>
-        )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {testimonials.length > 0 ? (
+              testimonials.map((testimonial) => (
+                <div
+                  key={testimonial.testimonial_id}
+                  className="bg-card flex flex-col gap-1  h-fit border border-border p-4 rounded-lg shadow-lg transition-transform hover:shadow-xl relative"
+                >
+                  {showCheckboxes && (
+                    <input
+                      type="checkbox"
+                      className="absolute top-2 right-2"
+                      checked={currentTestimonials.includes(
+                        testimonial.testimonial_id
+                      ) || isTestimonialInCurrentTestimonials(testimonial.testimonial_id)}
+                      onChange={() =>
+                        handleCheckboxChange(testimonial.testimonial_id)
+                      }
+                    />
+                  )}
+                  <p className="font-semibold text-lg text-foreground">
+                    {testimonial.name}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {testimonial.email}
+                  </p>
+                  <div className="flex gap-1">
+                    {
+                      Array(testimonial.rating).fill(0).map((e,i)=>{
+                          return <div key={uuidv4()}>⭐</div>
+                      })
+                    }
+                  </div>
+                  <p className="mt-2 text-base text-foreground">
+                    {testimonial.content}
+                  </p>
+                </div>
+
+))
+            ) : (
+              <p>No testimonials found for this workspace.</p>
+            )}
+          </div>
+        </div>
+
+        
+
       </div>
     </div>
+
   );
 }
