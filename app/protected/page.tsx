@@ -63,7 +63,7 @@ export default function ProtectedPage() {
               <div key={workspace.id} className="bg-card flex flex-col gap-2 border border-border p-4 rounded-lg shadow-lg">
                 <div className='flex'>
 
-                <Link href={`/protected/workspace/${workspace.workspace_title}`}>
+                <Link href={`/protected/workspace/${workspace.w_name}`}>
                     <h3 className="font-semibold text-lg text-foreground">{workspace.workspace_title}</h3>
                 </Link>
                 

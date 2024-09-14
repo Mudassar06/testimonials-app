@@ -4,4 +4,7 @@ export interface CreateWorkspaceRequest {
     workspace_title: string;
     workspace_desc?: string;
 }
-  
+
+export interface DeleteWorkspaceRequest {
+    id: string;
+}
