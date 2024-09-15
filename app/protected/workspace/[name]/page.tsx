@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 export default function WorkspacePage() {
@@ -13,6 +13,7 @@ export default function WorkspacePage() {
   const [deleteTestimonials, setDeleteTestimonials] = useState<any[]>([]);
   const [fetchedCurrentTestimonials, setFetchedCurrentTestimonials] = useState<any[]>([]);
   const [showCheckboxes, setShowCheckboxes] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     // Check whether the workspace exists for the given user
@@ -118,13 +119,28 @@ export default function WorkspacePage() {
     );
   };
 
+  //DELETE WORKSPACE
+  const deleteWorkspace = async () =>{
+    try{
+      const response = await axios.delete('/api/deleteWorkspace', {data: {id: workspace.id }} );
+
+      if(response.status == 200){
+        router.push('/protected');
+      }
+    }
+    catch (error){
+      console.error("Couldn't delete workspace", error);
+    }
+  }
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <div>
 
-      <div>
+      <div className="flex justify-between w-full items-center">
+        <div>
         <h1 className="text-3xl font-bold text-foreground">
           {workspace.w_name}
         </h1>
@@ -132,8 +148,9 @@ export default function WorkspacePage() {
           {workspace.workspace_desc} --   <br></br>
           {workspace.id}
         </p>
+        </div>
+        <button onClick={deleteWorkspace}>DELETE WORKSPACE</button>
       </div>
-
       <div className="flex gap-8">
 
 

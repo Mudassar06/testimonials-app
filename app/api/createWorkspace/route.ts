@@ -10,7 +10,6 @@ export async function POST(request: Request) {
     console.log(user?.id,"USERID");
 
     try {
-
         const body = await request.json();
         // console.log('Received body:', body);
 
