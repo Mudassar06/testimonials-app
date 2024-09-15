@@ -10,6 +10,7 @@ export default function WorkspacePage() {
   const [error, setError] = useState("");
   const [testimonials, setTestimonials] = useState<any[]>([]);
   const [currentTestimonials, setCurrentTestimonials] = useState<any[]>([]);
+  const [deleteTestimonials, setDeleteTestimonials] = useState<any[]>([]);
   const [fetchedCurrentTestimonials, setFetchedCurrentTestimonials] = useState<any[]>([]);
   const [showCheckboxes, setShowCheckboxes] = useState(false);
 
@@ -63,7 +64,7 @@ export default function WorkspacePage() {
         }
       }
     };
-
+    
     fetchCurrentTestimonials();
   }, [workspace, currentTestimonials]);
 
@@ -76,18 +77,29 @@ export default function WorkspacePage() {
     );
   };
 
+  const handleDeleteCheckboxChange = (testimonialId: string) => {
+    console.log(deleteTestimonials)
+    setDeleteTestimonials(
+      (prevSelected) =>
+        prevSelected.includes(testimonialId)
+          ? prevSelected.filter((id) => id !== testimonialId) // Uncheck
+          : [...prevSelected, testimonialId] // Check
+    );
+  };
   const toggleCheckboxVisibility = () => {
     setShowCheckboxes(!showCheckboxes);
   };
 
-  const confirmCurrentTestimonials = async () => {
+  const confirmCurrentTestimonials = async (action:string) => {
+    console.log(action,'--action',deleteTestimonials)
     try {
       currentTestimonials.map((testimonial_id: string) =>
         console.log("w_id:", workspace.id, "t_id:", testimonial_id, "IDIUHWDIH")
       );
       const response = await axios.post("/api/setCurrentTestimonials", {
         w_id: workspace.id,
-        testimonial_ids: currentTestimonials,
+        testimonial_ids: action == 'REMOVE' ? deleteTestimonials : action == 'ADD' && currentTestimonials,
+        action
       });
 
       console.log("Current testimonials confirmed:", response.data);
@@ -97,6 +109,7 @@ export default function WorkspacePage() {
       console.error("Error confirming current testimonials:", error);
     }
   };
+
 
   // Check if a testimonial is already in the fetchedCurrentTestimonials array
   const isTestimonialInCurrentTestimonials = (testimonialId: string) => {
@@ -116,7 +129,8 @@ export default function WorkspacePage() {
           {workspace.w_name}
         </h1>
         <p className="text-md  text-muted-foreground">
-          {workspace.workspace_desc}
+          {workspace.workspace_desc} --   <br></br>
+          {workspace.id}
         </p>
       </div>
 
@@ -125,24 +139,39 @@ export default function WorkspacePage() {
 
         {/* left layout */}
         <div className="">
+          <div className="w-full flex justify-between items-center gap-4">
           <h2 className="text-lg my-4 ">Current Testimonials</h2>
+          <button
+                className="text-destructive-foreground bg-destructive rounded text-sm h-fit px-2 py-1"
+                onClick={()=>confirmCurrentTestimonials('REMOVE')}
+                >Remove</button>
+          </div>
           {fetchedCurrentTestimonials.length > 0 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-1 gap-4 h-screen overflow-y-scroll custom-scroll px-2">
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-4 h-fit overflow-y-scroll custom-scroll">
               {fetchedCurrentTestimonials.map((testimonial) => (
                 <div
-                  key={testimonial.testimonials.testimonial_id}
-                  className="bg-card h-fit w-full border border-border p-4 rounded-lg shadow-lg"
+                  key={testimonial.testimonials.testimonial_id + 'current'}
+                  className="bg-card h-fit w-full border border-border p-4 rounded-lg shadow-lg relative flex flex-col gap-1"
                 >
+                                      <input
+                      type="checkbox"
+                      className="absolute top-2 right-2"
+                      defaultChecked={deleteTestimonials.includes(testimonial.testimonials.testimonial_id)}
+                      onChange={(e) =>{
+                        handleDeleteCheckboxChange(testimonial.testimonials.testimonial_id)
+                      }
+                      }
+                    />
                   <p className="font-semibold text-lg text-foreground">
                     {testimonial.testimonials.name}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     {testimonial.testimonials.email}
-                  {testimonial.rating}
                   </p>
+                  
                   <div className="flex gap-1">
                     {
-                      Array(testimonial.rating).fill(0).map((e,i)=>{
+                      Array(testimonial.testimonials.rating).fill(0).map((e,i)=>{
                           return <div key={uuidv4()}>⭐</div>
                       })
                     }
@@ -154,49 +183,39 @@ export default function WorkspacePage() {
               ))}
             </div>
           ) : (
-            <p>No current testimonials found for this workspace.</p>
+            <p className="text-muted-foreground">No current testimonials found for this workspace.</p>
           )}
         </div>
         {/* right layout */}
         
         <div>
 
+          <div className="flex justify-between items-center gap-4">
           <h2 className="text-lg my-4">My Testimonials</h2>
-          <div className="flex justify-between mb-4">
-            <button
-              className="bg-primary text-primary-foreground px-4 py-2 rounded"
-              onClick={toggleCheckboxVisibility}
-            >
-              {showCheckboxes ? "Cancel" : "Add Current Testimonials"}
-            </button>
-            {showCheckboxes && (
+
               <button
-                className="bg-primary text-primary-foreground px-4 py-2 rounded"
-                onClick={confirmCurrentTestimonials}
-              >
-                Add
-              </button>
-            )}
+                className="text-background bg-foreground rounded text-sm h-fit px-2 py-1"
+                onClick={()=>confirmCurrentTestimonials('ADD')}
+                >Add</button>
+
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {testimonials.length > 0 ? (
-              testimonials.map((testimonial) => (
-                <div
+              testimonials.map((testimonial) => {
+
+               return !fetchedCurrentTestimonials.map((testimonial) => testimonial.testimonials.testimonial_id).includes(testimonial.testimonial_id) && (<div
                   key={testimonial.testimonial_id}
                   className="bg-card flex flex-col gap-1  h-fit border border-border p-4 rounded-lg shadow-lg transition-transform hover:shadow-xl relative"
                 >
-                  {showCheckboxes && (
                     <input
                       type="checkbox"
                       className="absolute top-2 right-2"
-                      checked={currentTestimonials.includes(
-                        testimonial.testimonial_id
-                      ) || isTestimonialInCurrentTestimonials(testimonial.testimonial_id)}
-                      onChange={() =>
+                      defaultChecked={currentTestimonials.includes(testimonial.testimonial_id)}
+                      onChange={(e) =>{
                         handleCheckboxChange(testimonial.testimonial_id)
                       }
+                      }
                     />
-                  )}
                   <p className="font-semibold text-lg text-foreground">
                     {testimonial.name}
                   </p>
@@ -213,11 +232,11 @@ export default function WorkspacePage() {
                   <p className="mt-2 text-base text-foreground">
                     {testimonial.content}
                   </p>
-                </div>
+                </div>)
 
-))
-            ) : (
-              <p>No testimonials found for this workspace.</p>
+}))
+             : (
+              <p className="text-muted-foreground">No testimonials found for this workspace.</p>
             )}
           </div>
         </div>

@@ -34,10 +34,10 @@ export default function CreateWorkspace() {
     };
   
     return (
-        <div className="min-h-screen flex justify-center items-center bg-background">
+        <div className="h-full flex justify-center items-center bg-background">
           <form
             onSubmit={handleSubmit}
-            className="w-full max-w-lg p-8 bg-card shadow-md rounded-lg"
+            className="w-[400px]  p-8 bg-card shadow-md rounded-lg"
           >
             <h2 className="text-2xl font-bold mb-6 text-foreground">
               Create Workspace
@@ -96,7 +96,7 @@ export default function CreateWorkspace() {
             <div className="flex items-center justify-between">
               <button
                 type="submit"
-                className="bg-primary text-primary-foreground font-bold py-2 px-4 rounded-md focus:outline-none hover:bg-primary/80"
+                className="bg-primary text-primary-foreground py-2 px-4 rounded-md focus:outline-none hover:bg-primary/80"
               >
                 Create Workspace
               </button>
