@@ -163,12 +163,23 @@ export default function WorkspacePage() {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
+  const copyCodeToClipboard = (code: string) => {
+    navigator.clipboard.writeText(code);
+    alert("Code copied to clipboard!");
+  };
+
+  const codeSnippet = `
+    <div>
+      <iframe className="w-screen" src="http://localhost:3000/testimonials/${workspace.id}" ></iframe>
+    </div>
+  `;
+
   return (
     <div>
       <div className="flex justify-between w-full items-center">
         <div>
           <h1 className="text-3xl font-bold text-foreground">
-            {workspace.w_name}
+            {workspace.workspace_title}
           </h1>
           <p className="text-md  text-muted-foreground">
             {workspace.workspace_desc} -- <br></br>
@@ -176,6 +187,9 @@ export default function WorkspacePage() {
           </p>
         </div>
         <button onClick={deleteWorkspace}>DELETE WORKSPACE</button>
+      </div>
+      <div>
+        <a href={`http://localhost:3000/${workspace.w_name}`}>Link</a>
       </div>
       <div className="flex gap-8">
         {/* left layout */}
@@ -303,6 +317,20 @@ export default function WorkspacePage() {
             )}
           </div>
         </div>
+      </div>
+      <div className="mt-8">
+        <div className="flex justify-between items-center">
+          <h2 className="text-lg font-bold text-foreground">Code Snippet</h2>
+          <button
+            className="text-sm bg-primary text-primary-foreground px-2 py-1 rounded"
+            onClick={() => copyCodeToClipboard(codeSnippet)}
+          >
+            Copy Code
+          </button>
+        </div>
+        <pre className="bg-muted text-muted-foreground rounded-lg p-4 mt-4 overflow-x-auto">
+          <code>{codeSnippet}</code>
+        </pre>
       </div>
     </div>
   );
