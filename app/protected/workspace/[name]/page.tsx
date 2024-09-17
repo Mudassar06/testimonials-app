@@ -186,10 +186,17 @@ export default function WorkspacePage() {
             {workspace.id}
           </p>
         </div>
-        <button onClick={deleteWorkspace}>DELETE WORKSPACE</button>
+        <button className="text-sm bg-primary text-primary-foreground px-2 py-1 rounded" onClick={deleteWorkspace}>DELETE WORKSPACE</button>
       </div>
       <div>
-        <a href={`http://localhost:3000/${workspace.w_name}`}>Link</a>
+        <a
+          href={`http://localhost:3000/${workspace.w_name}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary underline hover:text-primary/80 transition-colors"
+        >
+          Sharable Link
+        </a>
       </div>
       <div className="flex gap-8">
         {/* left layout */}
